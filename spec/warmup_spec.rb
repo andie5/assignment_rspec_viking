@@ -2,6 +2,12 @@
 require 'warmup'
 
 describe Warmup do
+
+  before do
+     allow(STDOUT).to receive(:puts).and_return(nil)
+  end
+
+
   let(:warmup){Warmup.new}
   let(:arr) {Array.new(2)}
 

@@ -1,7 +1,11 @@
-# /spec/bow_spec.rb
+# /spec/viking_spec.rb
 require 'weapons/bow'
 
 describe Bow do
+
+  before do
+     allow(STDOUT).to receive(:puts).and_return(nil)
+  end
 
   let(:bow){Bow.new}
 
@@ -14,7 +18,7 @@ describe Bow do
       expect(bow.arrows).to eq(10)
     end
 
-    it "A Bow created with a specified number of arrows starts with that number of arrows" do
+    it "A Bow created with a specified number of arrows starts with dothat number of arrows" do
       starting_bows = 3
       bow_3 = Bow.new(3)
       expect(bow_3.arrows).to eq(3)

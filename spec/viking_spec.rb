@@ -1,1 +1,114 @@
-# Your code here
+# /spec/viking_spec.rb
+require 'viking'
+
+describe Viking do
+
+  before do
+     allow(STDOUT).to receive(:puts).and_return(nil)
+  end
+
+  let(:viking){Viking.new("Paul", 300, 30)}
+  let(:test){Viking.new}
+  let(:thor){Viking.new("Thor",90, 10, Bow.new)}
+  let(:bow){Bow.new}
+  let(:fist){Fists.new}
+
+  describe '#initialize' do
+    it "Passing a name to a new Viking sets that name attribute" do
+      expect(viking.name).to eq("Paul")
+    end
+
+    it 'Passing a health attribute to a new Viking sets that health attribute' do
+      expect(viking.health).to eq(300)
+    end
+
+    it "health cannot be overwritten after it\'s been set on initialize" do
+      expect{viking.health = 900}.to raise_error(NoMethodError)
+    end
+
+    it "A Viking\'s weapon starts out nil by default" do
+      expect(viking.weapon).to eq(nil)
+    end
+  end
+
+  describe "Viking weapons" do
+    it "Picking up a Weapon sets it as the Viking\'s weapon" do
+      expect(viking.pick_up_weapon(bow)).to eq(viking.weapon)
+    end
+
+    it "Picking up a non-Weapon raises an exception:" do
+      expect{viking.pick_up_weapon(viking)}.to raise_error("Can't pick up that thing")
+    end
+
+    it "Picking up a new Weapon replaces the Viking's existing weapon" do
+      viking.pick_up_weapon(bow)
+      viking.pick_up_weapon(fist)
+      expect(viking.weapon).to be_a(Fists)
+    end
+
+    it "Dropping a Viking's weapon leaves the Viking weaponless" do
+      tina = Viking.new("Tina", 10, 30, Bow.new)
+      tina.drop_weapon
+      expect(tina.weapon).to be_nil
+    end
+  end
+
+  describe "#receive_attack" do
+    it "The receive_attack method reduces that Viking's health by the specified amount" do
+      viking.receive_attack(7)
+      expect(viking.health).to eq(293)
+    end
+
+    it "The receive_attack method calls the take_damage method (hint: recall expect(...).to receive(...))" do
+
+      # viking_warrior = double( receive_attack: true)
+      # expect(viking_warrior).to receive(:take_damage)
+      # viking_warrior.receive_attack(2)
+
+      expect(viking).to receive(:take_damage)
+      viking.receive_attack(2)
+      
+    end
+  end
+
+  describe "#attack" do
+    it "attacking another Viking causes the recipient's health to drop" do
+      liam = Viking.new("Liam",200, 10, Bow.new)
+      viking.attack(liam)
+      expect(liam.health).to be <(200)
+    end
+
+    it "attacking another Viking calls that Viking's take_damage method" do
+      kerry = Viking.new("Kerry",100, 10, Bow.new)
+      expect(kerry).to receive(:take_damage)
+      viking.attack(kerry)
+    end
+
+    it "attacking with no weapon runs damage_with_fists" do
+      # test.drop_weapon
+      
+      expect(test).to receive(:damage_with_fists)
+      test.attack(thor)
+    end
+
+
+  end
+
+
+
+end
+
+ # allow(player).to receive(:gets).and_return("1,2")
+
+
+
+
+
+# it "attacking with no weapon deals Fists multiplier times strength damage
+# it "attacking with a weapon runs damage_with_weapon
+# it "attacking with a weapon deals damage equal to the Viking's strength times that Weapon's multiplier
+# it "attacking using a Bow without enough arrows uses Fists instead
+# it "Killing a Viking raises an error
+
+
+# end
