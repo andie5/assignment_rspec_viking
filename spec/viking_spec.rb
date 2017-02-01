@@ -8,10 +8,9 @@ describe Viking do
   end
 
   let(:viking){Viking.new("Paul", 300, 30)}
-  let(:test){Viking.new}
   let(:thor){Viking.new("Thor",90, 10, Bow.new)}
   let(:bow){Bow.new}
-  let(:fist){Fists.new}
+  let(:axe){Axe.new}
 
   describe '#initialize' do
     it "Passing a name to a new Viking sets that name attribute" do
@@ -42,8 +41,8 @@ describe Viking do
 
     it "Picking up a new Weapon replaces the Viking's existing weapon" do
       viking.pick_up_weapon(bow)
-      viking.pick_up_weapon(fist)
-      expect(viking.weapon).to be_a(Fists)
+      viking.pick_up_weapon(axe)
+      expect(viking.weapon).to be_a(Axe)
     end
 
     it "Dropping a Viking's weapon leaves the Viking weaponless" do
@@ -55,19 +54,13 @@ describe Viking do
 
   describe "#receive_attack" do
     it "The receive_attack method reduces that Viking's health by the specified amount" do
-      viking.receive_attack(7)
-      expect(viking.health).to eq(293)
+      viking.receive_attack(10)
+      expect(viking.health).to eq(290)
     end
 
     it "The receive_attack method calls the take_damage method (hint: recall expect(...).to receive(...))" do
-
-      # viking_warrior = double( receive_attack: true)
-      # expect(viking_warrior).to receive(:take_damage)
-      # viking_warrior.receive_attack(2)
-
       expect(viking).to receive(:take_damage)
       viking.receive_attack(2)
-      
     end
   end
 
@@ -85,30 +78,43 @@ describe Viking do
     end
 
     it "attacking with no weapon runs damage_with_fists" do
-      # test.drop_weapon
-      
-      expect(test).to receive(:damage_with_fists)
-      test.attack(thor)
+      viking_fist = Viking.new("Viking_Fist")
+      expect(viking_fist).to receive(:damage_with_fists).and_return(7.5)
+      viking_fist.attack(thor)
     end
 
+    it "attacking with no weapon deals Fists multiplier times strength damage" do
+      strength = 40
+      multiplier = 0.25
+      damage = strength * multiplier
+      ian = Viking.new("Ian", 100, strength)
 
+      expect(ian).to receive(:damage_with_fists).and_return(damage)
+      ian.attack(thor)
+    end
+
+    it "attacking with a weapon runs damage_with_weapon" do
+      expect(thor).to receive(:damage_with_weapon).and_return(20)
+      thor.attack(viking)
+    end
+
+    it "attacking with a weapon deals damage equal to the Viking's strength times that Weapon's multiplier" do
+      strength = 10
+      multiplier = 2
+      damage = strength * multiplier
+      expect(thor).to receive(:damage_with_weapon).and_return(damage)
+      thor.attack(viking)
+    end
+
+    it "attacking using a Bow without enough arrows uses Fists instead" do
+      oleg = Viking.new("Oleg", 50, 10, Bow.new(0))
+      expect(oleg).to receive(:damage_with_fists).and_return(2.5)
+      oleg.attack(thor)
+    end
+
+    it "Killing a Viking raises an error" do
+      weak_viking = Viking.new("Weak_Viking", 1,10)
+      expect{viking.attack(weak_viking)}.to raise_error("Weak_Viking has Died...")
+    end
   end
-
-
-
 end
-
- # allow(player).to receive(:gets).and_return("1,2")
-
-
-
-
-
-# it "attacking with no weapon deals Fists multiplier times strength damage
-# it "attacking with a weapon runs damage_with_weapon
-# it "attacking with a weapon deals damage equal to the Viking's strength times that Weapon's multiplier
-# it "attacking using a Bow without enough arrows uses Fists instead
-# it "Killing a Viking raises an error
-
-
-# end
