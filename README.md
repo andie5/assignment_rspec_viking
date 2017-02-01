@@ -15,6 +15,7 @@ load 'viking.rb'
 oleg = Viking.new("Oleg",90, 10, Bow.new)
 
 
-Tests can be run:
+
+To run tests:
 
 bundle exec guard
