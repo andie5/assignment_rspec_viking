@@ -7,9 +7,14 @@ Testing, testing, 1, 2, 3
 
 Andrea A
 
+
 To run script:
+
 load 'viking.rb'
+
 oleg = Viking.new("Oleg",90, 10, Bow.new)
 
+
 Tests can be run:
+
 bundle exec guard
